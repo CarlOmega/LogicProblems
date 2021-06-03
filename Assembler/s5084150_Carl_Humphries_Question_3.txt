@@ -1,0 +1,31 @@
+;Carl Humphries
+;5084150
+
+;wait for an input then checks if in range 1-9 if so then
+;print that number that amount of times
+
+;"value" to store the number of times being printed
+
+
+		ldx #$FFFF
+		wai
+		ldaa 0,x
+
+		cmpa #$30	;check if in range
+		ble finish	;send to end if not in range
+
+		cmpa #$39	;check if in range
+		bgt finish	;send to end if not range
+
+		ldx #$FB00
+start		staa 0,x
+		inx
+		inc value
+		cmpa value	;test to see if amount of times printed
+		bgt start	;if amount of times not brinted isnt equal loop
+
+finish		bra fin		;was a bug in looping after 9 was entered this send to end to avoid
+
+		.org $50
+value		.byte #$30
+fin		.end

@@ -1,0 +1,24 @@
+;Carl Humphries
+;5084150
+
+;prints A-Z in screen memory stopping at end of screen
+
+;A is hex value for ASCII 'A' to set intial value
+;"PastZ" is one over hex value for 'Z' to see if need to be reset
+
+		ldx #$FB00
+ResetA		ldaa A
+
+Start		staa 0,x
+		inx
+		inca
+		cmpa PastZ 	;compares the value to store to past the end to see if its valid
+		beq ResetA 	;if its past Z then resets A
+		cpx #$FF38	;compares storing location with end of screen
+		bmi Start	;if they dont match loops back to store next value
+		
+		
+		.org $50
+A		.byte #$41
+PastZ		.byte #$5B
+		.end

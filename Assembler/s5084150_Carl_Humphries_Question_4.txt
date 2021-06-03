@@ -1,0 +1,57 @@
+;Carl Humphries
+;5084150
+
+;the program loops through x amount of times printing 'X' 
+;then loops until next line and repeats this x amount of times
+
+;"value" stores the input 1-9
+;"pos" stores the adress of current line starting point as a word
+;"rows" counts the rows printed to compare
+;"XAC" store the acsii code for 'X'
+
+;stores the ouput in the display buffer to be shown on screen 
+
+		ldx #$FFFF
+		wai
+		ldaa 0,x
+
+		cmpa #$30	;check if in range
+		ble finish	;send to end if not in range
+
+		cmpa #$39	;check if in range
+		bgt finish	;send to end if not range
+
+		staa value
+		staa rows
+		ldab XAC
+		ldx pos
+
+new		ldaa value		
+start 		stab 0,x
+		inx 
+		deca
+		cmpa #$30	;checks if number of 'X's printed equal input
+		bne start	;if they don't loops to print more
+
+		ldx pos
+		ldaa #$36
+newLine		inx
+		deca
+		cmpa #$00	;checks if has incremented to next line start from previous line start
+		bne newLine	;if it hasn't then keeps increment x
+		stx pos
+
+		ldaa rows
+		deca
+		staa rows
+		cmpa #$30	;compares number of rows to 0 each time decrements it
+ 		bne new		;if it doesnt equal 0 restart printing rows
+	
+finish		bra fin		;sends it to the .end 
+
+		.org $50
+value		.byte #$30
+pos		.word $FB00
+rows		.byte #$30
+XAC		.byte #$58
+fin		.end

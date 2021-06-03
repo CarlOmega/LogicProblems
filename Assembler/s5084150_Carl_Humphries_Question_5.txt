@@ -1,0 +1,101 @@
+;Carl Humphries
+;5084150
+
+;The program loops through n times for each digit n, in a student number printing that number on 
+;a line n times then loops to next line. if the number is 0 it skips a line
+
+;"value" is used to compare the number of times printed
+;"digPos" is to see what digit it is upto  
+;"dig1" is the first digit in the student number stored in HEX/ASCII
+;"dig2" is the second digit in the student number stored in HEX/ASCII
+;"dig3" is the third digit in the student number stored in HEX/ASCII
+;"dig4" is the fourth digit in the student number stored in HEX/ASCII
+;"dig5" is the fith digit in the student number stored in HEX/ASCII
+;"dig6" is the sixth digit in the student number stored in HEX/ASCII
+;"dig7" is the seventh digit in the student number stored in HEX/ASCII
+;"pos" is the location of the start of the line that its upto stored in a word
+
+;it will store the output into the display buffer at FB00-FF37
+
+start		ldx pos
+		ldaa digPos
+
+		cmpa #$31	;compares the digPos to determine what digit it is upto
+		bne Two		;if its not this digit move to next digit
+		ldaa dig1
+		ldab #$30
+		bra print	;sends this digit to be printed
+
+Two		cmpa #$32	;compares the digPos to determine what digit it is upto
+		bne Three	;if its not this digit move to next digit
+		ldaa dig2
+		ldab #$30
+		bra print	;sends this digit to be printed
+
+Three		cmpa #$33	;compares the digPos to determine what digit it is upto
+		bne Four	;if its not this digit move to next digit
+		ldaa dig3
+		ldab #$30
+		bra print	;sends this digit to be printed
+
+Four		cmpa #$34	;compares the digPos to determine what digit it is upto
+		bne Five	;if its not this digit move to next digit
+		ldaa dig4
+		ldab #$30
+		bra print	;sends this digit to be printed
+
+Five		cmpa #$35	;compares the digPos to determine what digit it is upto
+		bne Six		;if its not this digit move to next digit
+		ldaa dig5
+		ldab #$30
+		bra print	;sends this digit to be printed
+
+Six		cmpa #$36	;compares the digPos to determine what digit it is upto
+		bne Seven	;if its not this digit move to next digit
+		ldaa dig6
+		ldab #$30
+		bra print	;sends this digit to be printed
+	
+Seven		cmpa #$37	;compares the digPos to determine what digit it is upto
+		bne finish	;if its not this digit end program finished printing
+		ldaa dig7
+		ldab #$30
+		bra print	;sends this digit to be printed
+
+print		stab value
+		cmpa value	;compares number of times printed with digit
+		beq endPRT	;if its printed n times endprint
+		staa 0,x
+		incb
+		inx
+		stab value
+		bra print	;once printed and incremented values loop back to be comapred
+
+endPRT		ldx pos
+		ldaa #$00
+newLine		inx
+		inca
+		cmpa #$36	;compares number of skipped lines to amount in a line
+		bne newLine	;if not on start of new line keep increment x
+		stx pos
+		
+		ldaa digPos
+		inca
+		staa digPos
+		cmpa #$38	;tests if the digPos is past number of digits 
+		bne start	;if not loop back to start
+
+finish		bra fin		;sends it to the .end 
+
+		.org $90
+value		.byte #$30
+digPos		.byte #$31
+dig1		.byte #$35
+dig2		.byte #$30
+dig3		.byte #$38
+dig4		.byte #$34
+dig5		.byte #$31
+dig6		.byte #$35
+dig7		.byte #$30
+pos		.word $FB00
+fin		.end

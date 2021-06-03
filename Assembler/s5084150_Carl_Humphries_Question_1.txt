@@ -1,0 +1,21 @@
+;Carl Humphries
+;5084150
+
+;stores '+' at all screen locations
+;by looping and incrementing until last screen location
+
+;"plus" stores the hex value for the ASCII '+'
+
+;stores the output at #$FB00-#$FF37
+		
+		ldx #$FB00
+		ldaa plus
+		
+start		staa 0,x
+		inx
+		cpx #$FF38	;comparing the x register with past the screen memory
+		bmi start 	;if its not past the screen memory loop back
+
+		.org $50
+plus		.byte #$2B 
+		.end
